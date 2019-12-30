@@ -46,7 +46,7 @@ INCLUDES	:=	include
 APP_AUTHOR	:=  Xpl0itR
 APP_TITLE	:=	Input-Test
 APP_TITLEID	:=  051337691337A000
-APP_VERSION :=  1.1.0
+APP_VERSION :=  1.2.0
 
 #---------------------------------------------------------------------------------
 # options for code generation

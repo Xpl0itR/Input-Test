@@ -1,6 +1,6 @@
-#include <string.h>
-#include <stdio.h>
 #include <array>
+#include <stdio.h>
+#include <string>
 #include <memory>
 #include "controller.h"
 
@@ -21,13 +21,31 @@ int main(int argc, char **argv)
 
     consoleInit(NULL);
 
-    printf("\x1b[1;1HPress PLUS to exit.");
+    printf(CONSOLE_CYAN CONSOLE_ESC(1;1H)" ______                           __           ______                __");
+    printf(CONSOLE_CYAN CONSOLE_ESC(2;1H)"/\\__  _\\                         /\\ \\__       /\\__  _\\              /\\ \\__");
+    printf(CONSOLE_CYAN CONSOLE_ESC(3;1H)"\\/_/\\ \\/     ___   _____   __  __\\ \\ ,_\\      \\/_/\\ \\/    __    ____\\ \\ ,_\\");
+    printf(CONSOLE_CYAN CONSOLE_ESC(4;1H)"   \\ \\ \\   /' _ `\\/\\ '__`\\/\\ \\/\\ \\\\ \\ \\/  _______\\ \\ \\  /'__`\\ /',__\\\\ \\ \\/");
+    printf(CONSOLE_CYAN CONSOLE_ESC(5;1H)"    \\_\\ \\__/\\ \\/\\ \\ \\ \\L\\ \\ \\ \\_\\ \\\\ \\ \\_/\\______\\\\ \\ \\/\\  __//\\__, `\\\\ \\ \\_");
+    printf(CONSOLE_CYAN CONSOLE_ESC(6;1H)"    /\\_____\\ \\_\\ \\_\\ \\ ,__/\\ \\____/ \\ \\__\\/______/ \\ \\_\\ \\____\\/\\____/ \\ \\__\\");
+    printf(CONSOLE_CYAN CONSOLE_ESC(7;1H)"    \\/_____/\\/_/\\/_/\\ \\ \\/  \\/___/   \\/__/          \\/_/\\/____/\\/___/   \\/__/");
+    printf(CONSOLE_CYAN CONSOLE_ESC(8;1H)"                     \\ \\_\\");
+    printf(CONSOLE_CYAN CONSOLE_ESC(9;1H)"                      \\/_/");
+	printf(CONSOLE_BLUE CONSOLE_ESC(10;1H)"v%d.%d.%d - by Xpl0itR", 1, 2, 0);
+                                                                         
+	
+    printf(CONSOLE_WHITE CONSOLE_ESC(7m) CONSOLE_ESC(12;1H)"Controller Status");
 
     for(auto& controller : controllers) {
-        if (controller->color.singleSet)
-            printf("\x1b[%i;1HController #%i: singleColorBody = 0x%08x, singleColorButtons = 0x%08x", 3 + (controller->id * 2), controller->id, controller->color.singleColorBody, controller->color.singleColorButtons);
-        if (controller->color.splitSet)
-            printf("\x1b[%i;1HController #%i: leftColorBody  = 0x%08x, leftColorButtons  = 0x%08x\nController #%i: rightColorBody = 0x%08x, rightColorButtons = 0x%08x", 4 + (controller->id * 2), controller->id, controller->color.leftColorBody, controller->color.leftColorButtons, controller->id, controller->color.rightColorBody, controller->color.rightColorButtons);
+        std::string controller_id = "#" + std::to_string(controller->id + 1);
+        if      (controller_id == "#9")  controller_id = "Handheld";
+        else if (controller_id == "#10") controller_id = "Unknown";
+    	
+        if (controller->isConnected) {
+            printf(CONSOLE_RESET CONSOLE_GREEN CONSOLE_ESC(%i;1H)"Controller %s: Connected", 13 + controller->id, controller_id.c_str());
+        }
+        else if (!controller->isConnected) {
+            printf(CONSOLE_RESET CONSOLE_RED CONSOLE_ESC(%i;1H)"Controller %s: Disconnected", 13 + controller->id, controller_id.c_str());
+        }
     }
 
     while(appletMainLoop()) {
@@ -42,12 +60,18 @@ int main(int argc, char **argv)
                 return 0;
             }
 
-            printf("\x1b[%i;1H\x1b[2KController #%i: %04d %04d %04d %04d", 23 + controller->id, controller->id, controller->stick.left.dx,  controller->stick.left.dy, controller->stick.right.dx, controller->stick.right.dy);
+            std::string controller_id = "#" + std::to_string(controller->id + 1);
+            if      (controller_id == "#9")  controller_id = "Handheld";
+            else if (controller_id == "#10") controller_id = "Unknown";
 
+            printf(CONSOLE_WHITE CONSOLE_ESC(7m) CONSOLE_ESC(24;1H)"Stick Status");
+            printf(CONSOLE_RESET CONSOLE_WHITE CONSOLE_ESC(%i;1H) CONSOLE_ESC(2K)"Controller %s: %04d %04d %04d %04d", 25 + controller->id, controller_id.c_str(), controller->stick.left.dx,  controller->stick.left.dy, controller->stick.right.dx, controller->stick.right.dy);
+
+            printf(CONSOLE_WHITE CONSOLE_ESC(7m) CONSOLE_ESC(36;1H)"Button Status");
             if(controller->keys.value)
-                printf("\x1b[%i;1H\x1b[2KController #%i: %s", 33 + controller->id, controller->id, controller->GetKeyStr().c_str());
+                printf(CONSOLE_RESET CONSOLE_WHITE CONSOLE_ESC(%i;1H) CONSOLE_ESC(2K)"Controller %s: %s", 37 + controller->id, controller_id.c_str(), controller->GetKeyStr().c_str());
             else
-                printf("\x1b[%i;1H\x1b[2KController #%i: Nothing pressed", 33 + controller->id, controller->id);
+                printf(CONSOLE_RESET CONSOLE_WHITE CONSOLE_ESC(%i;1H) CONSOLE_ESC(2K)"Controller %s:", 37 + controller->id, controller_id.c_str());
         }
     }
 }

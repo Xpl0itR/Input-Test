@@ -43,20 +43,21 @@ class Controller {
 
   public:
     HidControllerID id;
-    HidControllerColors color;
+    bool isConnected;
     struct {
         JoystickPosition left, right;
     } stick;
     Keys keys;
 
     Controller(HidControllerID id) : id(id) {
-        hidGetControllerColors(id, &color);
+        Update();
     }
 
     void Update() {
+        isConnected = hidIsControllerConnected(id);
+        keys.value  = hidKeysHeld(id);
         hidJoystickRead(&stick.left,  id, JOYSTICK_LEFT);
         hidJoystickRead(&stick.right, id, JOYSTICK_RIGHT);
-        keys.value = hidKeysHeld(id);
     }
 
     std::string GetKeyStr() {
