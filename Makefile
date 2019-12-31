@@ -46,7 +46,7 @@ INCLUDES	:=	include
 APP_AUTHOR	:=  Xpl0itR
 APP_TITLE	:=	Input-Test
 APP_TITLEID	:=  051337691337A000
-APP_VERSION :=  1.2.0
+APP_VERSION :=  1.2.1
 
 #---------------------------------------------------------------------------------
 # options for code generation
@@ -58,7 +58,7 @@ CFLAGS	:=	-g -Wall -O2 -ffunction-sections \
 
 CFLAGS	+=	$(INCLUDE) -D__SWITCH__
 
-CXXFLAGS	:= $(CFLAGS) -fno-rtti -fno-exceptions
+CXXFLAGS	:= $(CFLAGS) -fno-rtti -fno-exceptions -DVERSION='"${APP_VERSION}"'
 
 ASFLAGS	:=	-g $(ARCH)
 LDFLAGS	=	-specs=$(DEVKITPRO)/libnx/switch.specs -g $(ARCH) -Wl,-Map,$(notdir $*.map)

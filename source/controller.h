@@ -44,6 +44,7 @@ class Controller {
   public:
     HidControllerID id;
     bool isConnected;
+    HidControllerColors colors;
     struct {
         JoystickPosition left, right;
     } stick;
@@ -54,6 +55,8 @@ class Controller {
     }
 
     void Update() {
+        hidScanInput();
+        hidGetControllerColors(id, &colors);
         isConnected = hidIsControllerConnected(id);
         keys.value  = hidKeysHeld(id);
         hidJoystickRead(&stick.left,  id, JOYSTICK_LEFT);
