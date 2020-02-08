@@ -52,7 +52,7 @@ int main(int argc, char **argv)
         for(auto& controller : controllers) {
             controller->Update();
 			
-            if (controller->keys.plus) {
+            if (controller->keys.plus && controller->keys.minus) {
                 consoleExit(NULL);
                 return 0;
             }
