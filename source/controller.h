@@ -42,8 +42,8 @@ class Controller {
     static_assert(sizeof(Keys) == sizeof(u64));
 
   public:
-    HidControllerID id;
-    bool isConnected;
+    HidControllerID     id;
+    bool                isConnected;
     HidControllerColors colors;
     struct {
         JoystickPosition left, right;
@@ -56,11 +56,11 @@ class Controller {
 
     void Update() {
         hidScanInput();
-        hidGetControllerColors(id, &colors);
         isConnected = hidIsControllerConnected(id);
         keys.value  = hidKeysHeld(id);
         hidJoystickRead(&stick.left,  id, JOYSTICK_LEFT);
         hidJoystickRead(&stick.right, id, JOYSTICK_RIGHT);
+        hidGetControllerColors(id, &colors);
     }
 
     std::string GetKeyStr() {
